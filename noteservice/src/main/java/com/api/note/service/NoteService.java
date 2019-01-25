@@ -7,13 +7,13 @@ import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 
-import com.api.note.dto.CreateNoteDto;
+import com.api.note.dto.NoteDto;
 import com.api.note.entity.Note;
 import com.api.note.exception.NoteException;
 
 public interface NoteService {
 
-	public Note createNote(@Valid CreateNoteDto createnotedto,String token) throws NoteException;
+	Note createNote(@Valid NoteDto createnotedto,String token) throws NoteException;
 
 	public void updateNote(Note note, String token) throws NoteException;
 

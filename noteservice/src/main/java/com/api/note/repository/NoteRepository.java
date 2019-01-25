@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import com.api.note.entity.Note;
-public interface NoteRepository<User> extends CrudRepository<Note,Long> {
+public interface NoteRepository extends CrudRepository<Note,Long> {
 
 	@Query(value="SELECT * FROM note t WHERE t.userid = :id", nativeQuery=true)
 	List<Note> findAllById(@Param("id") long id);

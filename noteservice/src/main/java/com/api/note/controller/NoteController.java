@@ -6,18 +6,22 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.api.note.dto.CreateNoteDto;
+import com.api.note.dto.NoteDto;
 import com.api.note.entity.Note;
 import com.api.note.exception.NoteException;
 import com.api.note.repository.NoteRepository;
@@ -48,17 +52,19 @@ public class NoteController {
 	 * @return
 	 * @throws NoteException
 	 */
-	@RequestMapping(value = "/createnote", method = RequestMethod.POST)
-	public ResponseEntity<String> createNote(@Valid @RequestBody CreateNoteDto createnotedto, BindingResult bindingResult,
+	@PostMapping
+	public ResponseEntity<Response> createNote(@Valid @RequestBody NoteDto noteDto, BindingResult bindingResult,
 			HttpServletRequest request ) throws NoteException
 	{
 		if (bindingResult.hasErrors()) {
 			throw new NoteException("Invalid data ", 100);
 		}
 		String token= request.getHeader("Authorization");
-		System.out.println("token "+token);
-		Note note=noteservices.createNote(createnotedto,token);
-		return new ResponseEntity<String>("Note Created successfully", HttpStatus.OK);
+		Note note=noteservices.createNote(noteDto,token);
+		Response response=new Response();
+		response.setStatus(200);
+		response.setMessage("Note Created successfully");
+		return new ResponseEntity<Response>(response, HttpStatus.OK);
 		
 	}
 	
@@ -69,7 +75,8 @@ public class NoteController {
 	 * @return
 	 * @throws NoteException
 	 */
-	@RequestMapping(value = "/updatenote", method = RequestMethod.PUT)
+	//@RequestMapping(value = "/updatenote", method = RequestMethod.PUT)
+	@PutMapping
 	public ResponseEntity<String> updateNote(@RequestBody Note note, 
 			HttpServletRequest request) throws NoteException
 	{
@@ -87,6 +94,7 @@ public class NoteController {
 	 * @throws NoteException
 	 */
 	@RequestMapping(value = "/deletenote", method = RequestMethod.POST)
+	@DeleteMapping("/{id}")
 	public ResponseEntity<String> deleteNote(@RequestBody Note note, 
 			HttpServletRequest request) throws NoteException
 	{
@@ -102,7 +110,7 @@ public class NoteController {
 	 * @return
 	 * @throws NoteException
 	 */
-	@GetMapping("/allnotes")
+	@GetMapping
 	public ResponseEntity<List<Note>> getAllNotes() 
 			throws NoteException {
 	    List<Note> list=noteservices.getAllNotes();
@@ -117,7 +125,7 @@ public class NoteController {
 	 * @return
 	 * @throws NoteException
 	 */
-	@GetMapping("/notesbyid")
+	@GetMapping("/{id}")
 	public ResponseEntity<List<Note>> getNotesById(HttpServletRequest request) 
 			throws NoteException {
 		String token= request.getHeader("Authorization");

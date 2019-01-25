@@ -10,11 +10,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import com.api.note.dto.CreateNoteDto;
+import com.api.note.dto.NoteDto;
 import com.api.note.entity.Note;
 import com.api.note.exception.NoteException;
 import com.api.note.repository.NoteRepository;
-import com.api.note.util.NoteToken;
+import com.api.note.util.TokenUtil;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -37,37 +37,13 @@ public class NoteServiceImpl implements NoteService {
 	 * @throws NoteException
 	 */
 	@Override
-	public Note createNote(@Valid CreateNoteDto createnotedto, String token) throws NoteException {
+	public Note createNote(@Valid NoteDto createnotedto, String token) throws NoteException {
 
-		long id = verifyToken(token);
+		long id = TokenUtil.verifyToken(token);
 		Note note = modelMapper.map(createnotedto, Note.class);
 		note.setUserid(id);
-		note.setCreatedate(LocalDateTime.now());
-		note.setUpdateddate(LocalDateTime.now());
 		noterepository.save(note);
 		return note;
-	}
-
-	/**
-	 * This Method accept token ,decode token,and return id
-	 * @param token
-	 * @return
-	 * @throws NoteException
-	 */
-	public long verifyToken(String token) throws NoteException {
-		long id = 0;
-		try {
-			Verification verification = JWT.require(Algorithm.HMAC256(NoteToken.TOKEN_SECRET));
-			JWTVerifier jwtverifier = verification.build();
-			DecodedJWT decodedjwt = jwtverifier.verify(token);
-			Claim claim = decodedjwt.getClaim("ID");
-			id = claim.asLong();
-			System.out.println(id);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return id;
 	}
 
 	/**
@@ -78,7 +54,7 @@ public class NoteServiceImpl implements NoteService {
 	@Override
 	public void updateNote(Note note, String token) throws NoteException {
 
-		long id = verifyToken(token);
+		long id = TokenUtil.verifyToken(token);
 		System.out.println(id);
 		note.setUpdateddate(LocalDateTime.now());
 		note.setUserid(id);
@@ -92,7 +68,7 @@ public class NoteServiceImpl implements NoteService {
 	 */
 	@Override
 	public void deleteNote(Note note, String token) throws NoteException {
-		long id = verifyToken(token);
+		long id = TokenUtil.verifyToken(token);
 		noterepository.delete(note);
 	}
 
@@ -104,7 +80,7 @@ public class NoteServiceImpl implements NoteService {
 	@Override
 	public List<Note> getNotesById(String token) throws NoteException {
 
-		long id = verifyToken(token);
+		long id = TokenUtil.verifyToken(token);
 		System.out.println(id);
 		// return (List<Note>)
 		//List<Note> list = 
