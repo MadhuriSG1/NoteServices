@@ -49,11 +49,10 @@ public class TokenUtil {
 			DecodedJWT decodedjwt = jwtverifier.verify(token);
 			Claim claim = decodedjwt.getClaim("ID");
 			id = claim.asLong();
-			System.out.println(id);
 		} catch (Exception e) {
+			
 			throw new NoteException("Token is Not valid");
 		}
-
 		return id;
 	}
 

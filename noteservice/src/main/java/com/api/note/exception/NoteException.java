@@ -1,9 +1,19 @@
 package com.api.note.exception;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString
 public class NoteException extends Exception{
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
+	//private static final long serialVersionUID = 1L;
 	private String errorMessage;
-	private String requestedURI;
 	private int errorCode;
 	
 	public NoteException() {
@@ -20,39 +30,7 @@ public class NoteException extends Exception{
 	}
 
 
-	public NoteException(String errorMessage, String requestedURI, int errorCode) {
-		this(errorMessage,errorCode);
-		this.requestedURI = requestedURI;
-	}
-
-	public NoteException(String errorMessage, String requestedURI, int errorCode,Throwable throwable) {
-		super(errorMessage,throwable);
-		this.errorCode=errorCode;
-		this.requestedURI = requestedURI;
-	}
-	public String getErrorMessage() {
-		return errorMessage;
-	}
-	public String getRequestedURI() {
-		return requestedURI;
-	}
-	public int getErrorCode() {
-		return errorCode;
-	}
-	public void setErrorMessage(String errorMessage) {
-		this.errorMessage = errorMessage;
-	}
-	public void setRequestedURI(String requestedURI) {
-		this.requestedURI = requestedURI;
-	}
-	public void setErrorCode(int errorCode) {
-		this.errorCode = errorCode;
-	}
-	@Override
-	public String toString() {
-		return "NoteException [errorMessage=" + errorMessage + ", requestedURI=" + requestedURI + ", errorCode="
-				+ errorCode + "]";
-	}
+	
 
 
 }

@@ -13,7 +13,7 @@ import com.api.note.exception.NoteException;
 
 public interface NoteService {
 
-	Note createNote(@Valid NoteDto createnotedto,String token) throws NoteException;
+	void createNote(NoteDto createnotedto,String token) throws NoteException;
 
 	public void updateNote(Note note, String token) throws NoteException;
 

@@ -1,9 +1,9 @@
 package com.api.note.controller;
 
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import org.apache.coyote.Response;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,13 +13,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.api.note.dto.NoteDto;
 import com.api.note.entity.Note;
 import com.api.note.exception.NoteException;
+import com.api.note.response.Response;
 import com.api.note.service.NoteService;
+
 import lombok.extern.slf4j.Slf4j;
 /**
  * @author bridgelabz
@@ -31,15 +35,12 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
-@CrossOrigin(origins= {"http://localhost:4200"},exposedHeaders= {"token"})
+@CrossOrigin(origins= {"http://localhost:4200"},exposedHeaders= {"Authorization"})
 @RequestMapping("/api/note")
 public class NoteController {
 
 	@Autowired
 	private NoteService noteservices;
-	/*@Autowired
-	private NoteRepository noterepository;*/
-	
 	
 	/**
 	 * Create a new Note
@@ -50,16 +51,17 @@ public class NoteController {
 	 * @throws NoteException
 	 */
 	@PostMapping
-	public ResponseEntity<String> createNote(@Valid @RequestBody NoteDto noteDto, 
-			HttpServletRequest request ) throws NoteException
+	public ResponseEntity<Response> createNote(@RequestBody NoteDto noteDto, 
+			@RequestHeader("token") String token) throws NoteException
 	{
-		String token= request.getHeader("Authorization");
-		log.info(token);
-		Note note=noteservices.createNote(noteDto,token);
+		
+	//	String token= request.getHeader("Authorization");
+	//	log.info(token);
+		noteservices.createNote(noteDto,token);
 		Response response=new Response();
-		response.setStatus(200);
-		response.setMessage("Note Created successfully");
-		return new ResponseEntity<String>("Note Created successfully", HttpStatus.OK);
+		response.setStatusCode(200);
+		response.setStatusMessage("Note Created successfully");
+		return new ResponseEntity<>(response, HttpStatus.OK);
 		
 	}
 	
@@ -72,13 +74,15 @@ public class NoteController {
 	 */
 	//@RequestMapping(value = "/updatenote", method = RequestMethod.PUT)
 	@PutMapping
-	public ResponseEntity<String> updateNote(@RequestBody Note note, 
-			HttpServletRequest request) throws NoteException
+	public ResponseEntity<Response> updateNote(@RequestBody Note note, 
+			@RequestHeader("token") String token) throws NoteException
 	{
-		String token= request.getHeader("Authorization");
+		
 		noteservices.updateNote(note,token);
-		System.out.println("token  :"+token);
-		return new ResponseEntity<String>("Note Updated successfully", HttpStatus.OK);
+		Response response=new Response();
+		response.setStatusCode(200);
+		response.setStatusMessage("Note updated successfully");
+		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 	
 	/**
@@ -89,13 +93,16 @@ public class NoteController {
 	 * @throws NoteException
 	 */
 	@RequestMapping(value = "/deletenote", method = RequestMethod.POST)
-	@DeleteMapping("/{id}")
-	public ResponseEntity<String> deleteNote(@RequestBody Note note, 
-			HttpServletRequest request) throws NoteException
+	public ResponseEntity<Response> deleteNote(@RequestBody Note note, @RequestHeader("token") String token
+			) throws NoteException
 	{
-		String token= request.getHeader("Authorization");
+		System.out.println("asdfnokihnkbjbjubjubgubghu");
+		System.out.println(note);
 		noteservices.deleteNote(note,token);
-		return new ResponseEntity<String>("Note Deleted successfully", HttpStatus.OK);
+		Response response=new Response();
+		response.setStatusCode(200);
+		response.setStatusMessage("Note deleted successfully");
+		return new ResponseEntity<Response>(response, HttpStatus.OK);
 		
 	}
 	

@@ -2,25 +2,16 @@ package com.api.note.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
-
-import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
 import com.api.note.dto.NoteDto;
 import com.api.note.entity.Note;
 import com.api.note.exception.NoteException;
 import com.api.note.repository.NoteRepository;
 import com.api.note.util.TokenUtil;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.Claim;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.auth0.jwt.interfaces.Verification;
 
 @Service
 public class NoteServiceImpl implements NoteService {
@@ -37,13 +28,13 @@ public class NoteServiceImpl implements NoteService {
 	 * @throws NoteException
 	 */
 	@Override
-	public Note createNote(@Valid NoteDto createnotedto, String token) throws NoteException {
+	public void createNote(NoteDto createnotedto, String token) throws NoteException {
 
 		long id = TokenUtil.verifyToken(token);
 		Note note = modelMapper.map(createnotedto, Note.class);
-		note.setUserid(id);
+		note.setUserId(id);
 		noterepository.save(note);
-		return note;
+//		return note;
 	}
 
 	/**
@@ -57,7 +48,7 @@ public class NoteServiceImpl implements NoteService {
 		long id = TokenUtil.verifyToken(token);
 		System.out.println(id);
 		note.setUpdateddate(LocalDateTime.now());
-		note.setUserid(id);
+		note.setUserId(id);
 		noterepository.save(note);
 	}
 
@@ -95,8 +86,7 @@ public class NoteServiceImpl implements NoteService {
 	@Override
 	public List<Note> getAllNotes() throws NoteException {
 
-		List<Note> list = (List<Note>) noterepository.findAll();
-		return list;
+		return (List<Note>) noterepository.findAll();
 	}
 
 	/*@Override
