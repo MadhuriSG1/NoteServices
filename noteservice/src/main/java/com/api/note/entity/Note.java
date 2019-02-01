@@ -1,12 +1,14 @@
 package com.api.note.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -54,4 +56,12 @@ public class Note implements Serializable {
 
 	@NotNull
 	private long userId;
+
+	 @ManyToMany(cascade = CascadeType.ALL)
+	   /* @JoinTable(name = "note_label",
+	        joinColumns = @JoinColumn(name = "noteid", referencedColumnName = "noteid"),
+	        inverseJoinColumns = @JoinColumn(name = "labelId", referencedColumnName = "labelId"))
+	   */
+	 private List<Label> labels;
+
 }
