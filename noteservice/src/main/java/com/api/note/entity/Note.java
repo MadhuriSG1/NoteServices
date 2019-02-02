@@ -58,10 +58,6 @@ public class Note implements Serializable {
 	private long userId;
 
 	 @ManyToMany(cascade = CascadeType.ALL)
-	   /* @JoinTable(name = "note_label",
-	        joinColumns = @JoinColumn(name = "noteid", referencedColumnName = "noteid"),
-	        inverseJoinColumns = @JoinColumn(name = "labelId", referencedColumnName = "labelId"))
-	   */
 	 private List<Label> labels;
 
 }

@@ -1,6 +1,8 @@
 package com.api.note.entity;
 import java.io.Serializable;
 import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,7 +21,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@Table(name = "label")
+@Table(name = "labels")
 public class Label implements Serializable {
 
 	/**
@@ -35,7 +37,7 @@ public class Label implements Serializable {
 	private long userId;
 	
 	@JsonIgnore
-	 @ManyToMany(mappedBy = "labels")
+	 @ManyToMany(mappedBy = "labels",cascade=CascadeType.ALL)
 	    private List<Note> notes ;
 
 }

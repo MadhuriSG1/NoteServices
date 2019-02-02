@@ -13,6 +13,8 @@ import com.api.note.exception.NoteException;
 import com.api.note.repository.NoteRepository;
 import com.api.note.util.TokenUtil;
 
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @Service
 public class NoteServiceImpl implements NoteService {
 
@@ -45,10 +47,10 @@ public class NoteServiceImpl implements NoteService {
 	@Override
 	public void updateNote(Note note, String token) throws NoteException {
 
-		long id = TokenUtil.verifyToken(token);
-		System.out.println(id);
+		long userid = TokenUtil.verifyToken(token);
+		log.info("userid");
 		note.setUpdateddate(LocalDateTime.now());
-		note.setUserId(id);
+		note.setUserId(userid);
 		noterepository.save(note);
 	}
 

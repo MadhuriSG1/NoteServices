@@ -1,19 +1,19 @@
 package com.api.note.service;
-
+import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
-
+import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.api.note.dto.LabelDto;
 import com.api.note.entity.Label;
 import com.api.note.entity.Note;
 import com.api.note.exception.NoteException;
 import com.api.note.repository.LabelRepository;
 import com.api.note.repository.NoteRepository;
 import com.api.note.util.TokenUtil;
+
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @Service
 public class LabelServiceImpl implements LabelService{
 
@@ -28,46 +28,71 @@ public class LabelServiceImpl implements LabelService{
 	private ModelMapper modelMapper;
 
 	@Override
-	public void createLabel(LabelDto labeldto, String token) throws NoteException {
-		// TODO Auto-generated method stub
+	public void createLabel(Label label, String token) throws NoteException {
+
 		long userid = TokenUtil.verifyToken(token);
-		Note note=noterepository.findById(labeldto.getNoteid()).orElseThrow(()->new NoteException("Notes Not Found ",100));
-		Label label=modelMapper.map(labeldto, Label.class);
-		label.setUserId(userid);
-		List<Label> labels=note.getLabels();
+		 label.setUserId(userid);
+		labelrepository.save(label);
+	}
+	
+
+	@Override
+	public void labelAddToNote(long noteid, long labelid) throws NoteException {
+		Label label=labelrepository.findById(labelid).orElseThrow(()-> new NoteException("Label not found"));
+		
+		log.info("label");
+		Note note=noterepository.findById(noteid).orElseThrow(()-> new NoteException("Note not found"));
+	    List<Label>	labels=note.getLabels();
 		labels.add(label);
 		note.setLabels(labels);
-		noterepository.save(note);	
+		
+		log.info("note");
+		noterepository.save(note);		
 	}
-/*
+
+
 	@Override
-	public void createLabel(Label label, String token) throws NoteException {
+	public List<Label> getAllLabels(String token) throws NoteException {
+	
+	
+		long userid = TokenUtil.verifyToken(token);		
+		List<Label> list = labelrepository.findAll().stream().filter
+				(label->label.getUserId()==userid).collect(Collectors.toList());
+
+		return list;
+	}
+
+
+	@Override
+	public void removeLabelFromNote(long noteid, long labelId) {
+		Label label=labelrepository.findById(labelId).get();
+		Note note=noterepository.findById(noteid).get();
+		note.getLabels().remove(label);
+		noterepository.save(note);
+	}
+
+
+	@Override
+	public void deleteLabel(Label label, String token) throws NoteException {
+		
+			long userid = TokenUtil.verifyToken(token);
+			labelrepository.delete(label);
+	}
+
+
+	@Override
+	public void updateLabel(Label label, String token) throws NoteException {
 		long userid = TokenUtil.verifyToken(token);
-		//Optional<Note> note=noterepository.findById(label.getLabelId());
 		label.setUserId(userid);
-		//note.
-		label.save(label);
-		
-	}*/
-
-	@Override
-	public void updateLabel(Note note, String token) throws NoteException {
-		// TODO Auto-generated method stub
-		
+		labelrepository.save(label);
+			
 	}
 
-	@Override
-	public void deleteLabel(Note note, String token) throws NoteException {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
-	public List<Label> getAllLabels(long noteid,String token) throws NoteException {
-		TokenUtil.verifyToken(token);
-		Note note=noterepository.findById(noteid).orElseThrow(()
-				->new NoteException("Notes Not Found ",100));
-		List<Label> labels=note.getLabels();
+	public List<?> sortByTitle() {
+		List<Label> labels=labelrepository.findAll();
+		labels.sort(Comparator.comparing(Label::getLabelTitle));
 		return labels;
 	}
 
