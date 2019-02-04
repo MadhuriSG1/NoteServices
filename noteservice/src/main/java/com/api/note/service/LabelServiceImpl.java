@@ -75,7 +75,7 @@ public class LabelServiceImpl implements LabelService{
 	@Override
 	public void deleteLabel(Label label, String token) throws NoteException {
 		
-			long userid = TokenUtil.verifyToken(token);
+			TokenUtil.verifyToken(token);
 			labelrepository.delete(label);
 	}
 

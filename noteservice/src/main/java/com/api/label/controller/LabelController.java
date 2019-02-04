@@ -4,6 +4,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -22,13 +24,13 @@ import com.api.note.service.LabelService;
 
 
 @RestController
-//@CrossOrigin(origins= {"http://localhost:4200"},exposedHeaders= {"Authorization"})
+@CrossOrigin(origins= {"http://localhost:4200"},exposedHeaders= {"Authorization"})
 @RequestMapping("/api/label")
 public class LabelController {
 	@Autowired
 	private LabelService labelservices;
 	
-	@PostMapping("/createlabel")
+	@PostMapping
 	public ResponseEntity<Response> createLabel(@RequestBody Label label,@RequestHeader String token) throws NoteException
 	{
 		
@@ -51,8 +53,8 @@ public class LabelController {
     }
 	
 	
-	@RequestMapping(value = "/getall", method = RequestMethod.GET)
-	public ResponseEntity<List<Label>> addLabelsToNote(@RequestHeader("token") String token
+	@GetMapping
+	public ResponseEntity<List<Label>> getAllLabels(@RequestHeader("token") String token
 			) throws NoteException
 	{
 	    List<Label> list=labelservices.getAllLabels(token);
@@ -73,7 +75,7 @@ public class LabelController {
 		return new ResponseEntity<Response>(response,HttpStatus.OK);
      }
 	
-	@PutMapping("/updatelabel")
+	@PutMapping
 	public ResponseEntity<Response> updateLabel(@RequestBody Label label,@RequestHeader String token) throws NoteException
 	{
 		
@@ -85,7 +87,9 @@ public class LabelController {
 		
 		return new ResponseEntity<Response>(response,HttpStatus.OK);
 	}
-	@PostMapping("/deletelabel")
+	
+	//@PostMapping("/delete")
+	@DeleteMapping
 	public ResponseEntity<Response> deleteLabel(@RequestBody Label label,@RequestHeader String token) throws NoteException
 	{
 		labelservices.deleteLabel(label,token);

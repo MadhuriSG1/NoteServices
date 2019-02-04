@@ -1,6 +1,5 @@
 package com.api.note.controller;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,9 +45,7 @@ public class NoteController {
 	public ResponseEntity<Response> createNote(@RequestBody NoteDto noteDto, 
 			@RequestHeader("token") String token) throws NoteException
 	{
-		
-	//	String token= request.getHeader("Authorization");
-	//	log.info(token);
+	   // log.info(token);
 		noteservices.createNote(noteDto,token);
 		Response response=new Response();
 		response.setStatusCode(200);
@@ -117,14 +114,14 @@ public class NoteController {
 	 * @return
 	 * @throws NoteException
 	 */
-	@GetMapping("/{id}")
+	/*@GetMapping("/{id}")
 	public ResponseEntity<List<Note>> getNotesById(HttpServletRequest request) 
 			throws NoteException {
 		String token= request.getHeader("Authorization");
 	    List<Note> list=noteservices.getNotesById(token);
 	    return new ResponseEntity(list,HttpStatus.OK);
 		
-	}
+	}*/
 	
 	
 	/*@GetMapping("/listofnotes")
