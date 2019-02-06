@@ -1,6 +1,7 @@
 package com.api.note.entity;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -38,6 +39,6 @@ public class Label implements Serializable {
 	
 	@JsonIgnore
 	 @ManyToMany(mappedBy = "labels",cascade=CascadeType.ALL)
-	    private List<Note> notes ;
+	    private Set<Note> notes ;
 
 }

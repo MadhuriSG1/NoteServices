@@ -2,6 +2,8 @@ package com.api.note.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,11 +36,11 @@ public class Note implements Serializable {
 	@Column(length=2000)
 	private String description;
 
-	private Boolean isTrash;
+	private Boolean isTrash = Boolean.FALSE;
 
-	private Boolean isArchive;
+	private Boolean isArchive = Boolean.FALSE;
 
-	private Boolean isPin;
+	private Boolean isPin = Boolean.FALSE;
 	
 	@Column(columnDefinition="varchar(500)")
 	private String image;
@@ -58,6 +60,6 @@ public class Note implements Serializable {
 	private long userId;
 
 	 @ManyToMany(cascade = CascadeType.ALL)
-	 private List<Label> labels;
+	 private Set<Label> labels;
 
 }

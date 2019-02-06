@@ -1,18 +1,15 @@
 package com.api.note.service;
-
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.api.note.dto.NoteDto;
 import com.api.note.entity.Note;
 import com.api.note.exception.NoteException;
 import com.api.note.repository.NoteRepository;
 import com.api.note.util.TokenUtil;
-
 import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
@@ -60,25 +57,10 @@ public class NoteServiceImpl implements NoteService {
 	 * @throws NoteException
 	 */
 	@Override
-	public void deleteNote(Note note, String token) throws NoteException {
+	public void deleteNote(Note note, String token) throws NoteException 
+	{
 		long id = TokenUtil.verifyToken(token);
 		noterepository.delete(note);
-	}
-
-	/**
-	 * Delete note by id
-	 * @param note,token
-	 * @throws NoteException
-	 */
-	@Override
-	public List<Note> getNotesById(String token) throws NoteException {
-
-		long id = TokenUtil.verifyToken(token);
-		System.out.println(id);
-		// return (List<Note>)
-		//List<Note> list = 
-		return noterepository.findAllById(id);
-
 	}
 	
 	/**
@@ -86,15 +68,22 @@ public class NoteServiceImpl implements NoteService {
 	 * @throws NoteException
 	 */
 	@Override
-	public List<Note> getAllNotes() throws NoteException {
-
-		return (List<Note>) noterepository.findAll();
+	public List<Note> getAllNotes(String token,String isTrash,String isArchive) throws NoteException {
+		long userid = TokenUtil.verifyToken(token);	
+		boolean is1=false;
+		boolean is2=false;
+		if(isArchive.equals("true"))
+				{
+				is1=true;
+				}
+		
+		if(isTrash.equals("true"))
+				{
+				is2=true;
+				}
+		
+		return noterepository.findAllByStatus(userid, is1, is2)
+				.orElse(new ArrayList<Note>());
 	}
 
-	/*@Override
-	public List<Note> listOfNotes(String token,String value) throws NoteException{
-		
-		long id = verifyToken(token);
-		return noterepository.findAllById(id,value);
-	}*/
 }

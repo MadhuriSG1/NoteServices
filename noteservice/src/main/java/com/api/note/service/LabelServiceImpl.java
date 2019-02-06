@@ -1,8 +1,8 @@
 package com.api.note.service;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.api.note.entity.Label;
@@ -13,6 +13,10 @@ import com.api.note.repository.NoteRepository;
 import com.api.note.util.TokenUtil;
 
 import lombok.extern.slf4j.Slf4j;
+/**
+ * @author admin1
+ *
+ */
 @Slf4j
 @Service
 public class LabelServiceImpl implements LabelService{
@@ -23,10 +27,6 @@ public class LabelServiceImpl implements LabelService{
 	@Autowired
 	private NoteRepository noterepository;
 	
-
-	@Autowired
-	private ModelMapper modelMapper;
-
 	@Override
 	public void createLabel(Label label, String token) throws NoteException {
 
@@ -36,13 +36,16 @@ public class LabelServiceImpl implements LabelService{
 	}
 	
 
+	/* (non-Javadoc)
+	 * @see com.api.note.service.LabelService#labelAddToNote(long, long)
+	 */
 	@Override
 	public void labelAddToNote(long noteid, long labelid) throws NoteException {
 		Label label=labelrepository.findById(labelid).orElseThrow(()-> new NoteException("Label not found"));
 		
 		log.info("label");
 		Note note=noterepository.findById(noteid).orElseThrow(()-> new NoteException("Note not found"));
-	    List<Label>	labels=note.getLabels();
+	    Set<Label>	labels=note.getLabels();
 		labels.add(label);
 		note.setLabels(labels);
 		

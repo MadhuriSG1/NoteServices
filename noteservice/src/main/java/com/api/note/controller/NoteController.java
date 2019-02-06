@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.api.note.dto.NoteDto;
 import com.api.note.entity.Note;
@@ -100,20 +101,14 @@ public class NoteController {
 	 * @throws NoteException
 	 */
 	@GetMapping
-	public ResponseEntity<List<Note>> getAllNotes() 
+	public ResponseEntity<List<Note>> getAllNotes(@RequestHeader("token") String token,@RequestParam String isTrash, @RequestParam String isArchive ) 
 			throws NoteException {
-	    List<Note> list=noteservices.getAllNotes();
+	    List<Note> list=noteservices.getAllNotes(token,isTrash,isArchive);
 	    return new ResponseEntity<List<Note>>(list,HttpStatus.OK);
 		
 	}
 	
 
-	/**
-	 * Get All Notes for given ID
-	 * @param request
-	 * @return
-	 * @throws NoteException
-	 */
 	/*@GetMapping("/{id}")
 	public ResponseEntity<List<Note>> getNotesById(HttpServletRequest request) 
 			throws NoteException {

@@ -16,9 +16,11 @@ public class NoteDto {
 	//@NotNull
 	private String description;
 
-	private Boolean isArchive;
+	private Boolean isArchive=Boolean.FALSE;
 
-	private Boolean isPin;
+	private Boolean isPin=Boolean.FALSE;
+	
+	private Boolean isTrash = Boolean.FALSE;
 
 	private String image;
 
