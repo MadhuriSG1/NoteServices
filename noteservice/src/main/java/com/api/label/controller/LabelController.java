@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -20,14 +19,12 @@ import com.api.note.service.LabelService;
 
 import lombok.extern.slf4j.Slf4j;
 
-
-
-
 /**
  * @author admin1
  * @RestController-Map incoming request to appropriate Class
  * @RequestMapping-Map incoming request to appropriate method
  */
+ 
 @Slf4j
 @RestController
 @CrossOrigin(origins= {"http://localhost:4200"},exposedHeaders= {"Authorization"})
@@ -123,7 +120,7 @@ public class LabelController {
 		
 		Response response=new Response();
 		response.setStatusCode(200);
-		response.setStatusMessage("Label Updated successfully");
+		response.setStatusMessage("Label Updated Successfully");
 		
 		return new ResponseEntity<Response>(response,HttpStatus.OK);
 	}
@@ -136,7 +133,7 @@ public class LabelController {
 	 * @return
 	 * @throws NoteException
 	 */
-	@DeleteMapping
+	@PostMapping("/deletelabel")
 	public ResponseEntity<Response> deleteLabel(@RequestBody Label label,@RequestHeader String token) throws NoteException
 	{
 		labelservices.deleteLabel(label,token);
@@ -145,6 +142,9 @@ public class LabelController {
 		response.setStatusMessage("Label Deleted");
 		return new ResponseEntity<Response>(response,HttpStatus.OK);
     }
+	/**
+	 * Purpose:sort label according to title
+	 */
 	@GetMapping("/sortlabelbytitle")
 	public List<?> sortByTitle()
 	{

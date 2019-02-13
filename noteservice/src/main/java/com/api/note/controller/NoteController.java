@@ -109,22 +109,4 @@ public class NoteController {
 	}
 	
 
-	/*@GetMapping("/{id}")
-	public ResponseEntity<List<Note>> getNotesById(HttpServletRequest request) 
-			throws NoteException {
-		String token= request.getHeader("Authorization");
-	    List<Note> list=noteservices.getNotesById(token);
-	    return new ResponseEntity(list,HttpStatus.OK);
-		
-	}*/
-	
-	
-	/*@GetMapping("/listofnotes")
-	public ResponseEntity<List<Note>> listOfnotes(HttpServletRequest request,@PathVariable("value")String value) 
-			throws NoteException {
-		String token= request.getHeader("Authorization");
-	    List<Note> list=noteservices.listOfNotes(token,value);
-	    return new ResponseEntity<List<Note>>(list,HttpStatus.OK);
-		
-	}*/
 }
