@@ -1,6 +1,5 @@
 package com.api.note.controller;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,17 +7,16 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.api.note.entity.Collaborator;
 import com.api.note.entity.Note;
 import com.api.note.exception.NoteException;
 import com.api.note.response.Response;
 import com.api.note.service.CollaboratorService;
+
+import ch.qos.logback.classic.Logger;
 
 @RestController
 @CrossOrigin(origins= {"http://localhost:4200"},exposedHeaders= {"Authorization"})
@@ -28,14 +26,24 @@ public class CollaboratorController {
 	@Autowired
 	private CollaboratorService collaboratorservices;
 	@PostMapping
-	public ResponseEntity<Response> addCollaborator(@RequestParam long noteid,@RequestParam long id,
+	public ResponseEntity<Response> addCollaborator(@RequestParam long sharedUserID,@RequestParam long sharedNoteId,
 			@RequestHeader("token") String token) throws NoteException
 	{
-		collaboratorservices.addCollaborator(noteid,id,token);
+		
+		long resp=collaboratorservices.addCollaborator(sharedUserID,sharedNoteId,token);
 		Response response=new Response();
-		response.setStatusCode(200);
-		response.setStatusMessage("Collaborator added successfully");
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		if(resp==-1L)
+		{
+			response.setStatusCode(100);
+			response.setStatusMessage("Person already added");
+		}
+		else
+		{
+			response.setStatusCode(200);
+			response.setStatusMessage("Collaborator added successfully");
+		}
+		
+		return new ResponseEntity<Response>(response, HttpStatus.OK);
 		
 		
 	}
@@ -47,11 +55,15 @@ public class CollaboratorController {
 		
 	}
 	
-	@DeleteMapping
-	public ResponseEntity<Response> deleteCollaborator( @RequestHeader("token") String token,@RequestParam Long noteid) throws NoteException
+  @DeleteMapping
+	public ResponseEntity<Response> deleteCollaborator(@RequestHeader("token") String token,
+			@RequestParam long sharedUserID,@RequestParam long sharedNoteId) throws NoteException
 	{
-		collaboratorservices.deleteCollaborator(token,noteid);
-		return null;
+		collaboratorservices.deleteCollaborator(token,sharedUserID,sharedNoteId);
+		Response response=new Response();
+		response.setStatusCode(200);
+		response.setStatusMessage("Collaborator user deleted successfully");
+		return new ResponseEntity<Response>(response, HttpStatus.OK);
 		
 	}
 	

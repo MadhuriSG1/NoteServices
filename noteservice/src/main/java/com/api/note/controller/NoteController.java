@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.api.note.dto.NoteDto;
+import com.api.note.dto.TotalNotesDto;
 import com.api.note.entity.Note;
 import com.api.note.exception.NoteException;
 import com.api.note.response.Response;
+import com.api.note.service.CollaboratorService;
 import com.api.note.service.NoteService;
 
 /**
@@ -33,6 +35,9 @@ public class NoteController {
 
 	@Autowired
 	private NoteService noteservices;
+	
+	@Autowired
+	private CollaboratorService collaboratorService;
 	
 	/**
 	 * Create a new Note
@@ -100,13 +105,24 @@ public class NoteController {
 	 * @return
 	 * @throws NoteException
 	 */
+	
 	@GetMapping
-	public ResponseEntity<List<Note>> getAllNotes(@RequestHeader("token") String token,@RequestParam String isTrash, @RequestParam String isArchive ) 
-			throws NoteException {
-	    List<Note> list=noteservices.getAllNotes(token,isTrash,isArchive);
-	    return new ResponseEntity<List<Note>>(list,HttpStatus.OK);
+	public ResponseEntity<List<TotalNotesDto>> getAllNotes(@RequestHeader("token") String token,@RequestParam String isArchive,@RequestParam String isTrash) 
+			throws NoteException
+	{
+	    List<TotalNotesDto> listTotalNotes=noteservices.getAllNotes(token,isArchive,isTrash);
+	    return new ResponseEntity<List<TotalNotesDto>>(listTotalNotes,HttpStatus.OK);
 		
 	}
 	
+	/*@GetMapping
+	public ResponseEntity<List<Notes>>  ResponseEntity<List<SendingNotes>> void listAllNotes(@RequestHeader("token")String token,@RequestParam String archive,@RequestParam String trash)throws NoteException //@PathVariable("value") String value,
+	{
+		System.out.println(archive+"   "+trash);
+		List<SendingNotes> notesall=noteServices.listAllNotes(token, archive, trash);
+		return new ResponseEntity<List<SendingNotes>>(notesall,HttpStatus.OK);
+		
+} 
+	*/
 
 }

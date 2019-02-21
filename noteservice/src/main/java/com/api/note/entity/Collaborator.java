@@ -7,7 +7,6 @@ import javax.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
 @Entity
 @Getter
 @Setter
@@ -15,10 +14,6 @@ import lombok.ToString;
 public class Collaborator implements Serializable {
 
 	
-	public Collaborator(Long noteid2, Long id2) {
-		this.noteid=noteid2;
-		this.id=id2;
-	}
 	private static final long serialVersionUID = 1L;
 	
 	@Id
@@ -27,8 +22,15 @@ public class Collaborator implements Serializable {
 	private Long id; 
 	private Long noteid;
 	
-	
-	
-	
+	public Collaborator(Long noteid2, Long id2) {
+		this.noteid=noteid2;
+		this.id=id2;
+		
+		
+	}
 
+	public Collaborator() {
+		
+	}
+	
 }

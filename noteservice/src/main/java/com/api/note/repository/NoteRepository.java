@@ -11,7 +11,7 @@ public interface NoteRepository extends CrudRepository<Note,Long> {
 //	@Query(value="select * from note where user_id=:id AND is_archive=:isArchive AND is_trash=:isTrash",nativeQuery=true)
 //	Optional<List<Note>> findAllById(@Param("id") long id,@Param("isArchive") boolean isArchive,@Param("isTrash") boolean isTrash );
 	@Query(value="select * from note where user_id=:id AND is_archive=:isArchive AND is_trash=:isTrash",nativeQuery=true)
-	Optional<List<Note>> findAllByStatus(@Param("id")long id, @Param("isArchive") Boolean isArchive, @Param("isTrash") Boolean isTrash);
+	Optional<List<Note>> findAllByStatus(@Param("id")Long id, @Param("isArchive") Boolean isArchive, @Param("isTrash") Boolean isTrash);
 
 	@Query(value="select * from note where noteid IN (:ids)",nativeQuery=true)
 	List<Note> findAllCollaboratorNotes(@Param("ids") List<Long> allNotesId);

@@ -107,7 +107,7 @@ public class LabelServiceImpl implements LabelService{
 	 */
 	@Override
 	public void updateLabel(Label label, String token) throws NoteException {
-		long userid = TokenUtil.verifyToken(token);
+	    TokenUtil.verifyToken(token);
 		
 		log.info("\n\n\n\n\n"+label);
 		labelrepository.save(label);
