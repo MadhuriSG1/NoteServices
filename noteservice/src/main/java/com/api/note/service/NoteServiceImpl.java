@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -22,24 +23,25 @@ import com.api.note.util.TokenUtil;
 import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
+@PropertySource("classpath:application.properties")
 public class NoteServiceImpl implements NoteService {
-
-	@Autowired
-	private NoteRepository noterepository;
-	@Autowired
-	private CollaboratorRepository collaboratorRepository;
-
+	
 	@Autowired
 	private ModelMapper modelMapper;
 
-
+	@Autowired
+	private NoteRepository noterepository;
+	
+	@Autowired
+	private CollaboratorRepository collaboratorRepository;
+	
 	@Autowired
 	private CollaboratorService collaboratorService;
 	
-	 @Autowired
-	 private RestTemplate restTemplate;
-	 
-	 @Value("${spring.ROOT_URI}")
+	@Autowired
+	private RestTemplate restTemplate;
+			 
+	@Value("${spring.ROOT_URI}")
 	 private String ROOT_URI; 
 	
 	/**
@@ -90,31 +92,57 @@ public class NoteServiceImpl implements NoteService {
 	 */
 	@Override
 	public  List<TotalNotesDto> getAllNotes(String token,String isArchive,String isTrash) throws NoteException {
-		long userid = TokenUtil.verifyToken(token);
+		long userId = TokenUtil.verifyToken(token);
 
-		 List<Note> noteList=noterepository.findAllByStatus(userid, Boolean.valueOf(isArchive), Boolean.valueOf(isTrash))
+		 List<Note> noteList=noterepository.findAllByStatus(userId, Boolean.valueOf(isArchive), Boolean.valueOf(isTrash))
 				.orElse(new ArrayList<Note>());
 		 noteList.addAll(collaboratorService.getCollaboratorNotes(token));
-		 
-		 List<TotalNotesDto> xyz=new ArrayList<TotalNotesDto>();
+		 System.out.println("notelist  "+noteList);
+		 List<TotalNotesDto> totalNotesList=new ArrayList<TotalNotesDto>();
 		 for(int i=0;i<noteList.size();i++)
 		 {
 			 List<BigInteger> allUsers=new ArrayList<BigInteger>();
 			 Optional<List<Object>> usersList=collaboratorRepository.findAllUsersOfNote(noteList.get(i).getNoteid());
-			 TotalNotesDto lmn=null;
+			 System.out.println("usersList = "+usersList);
+			 TotalNotesDto totalNotes=null;
 			 if(usersList.isPresent())
 			 {
-				 usersList.get().stream().forEach(each->allUsers.add((BigInteger)each));
-				 ResponseEntity<CollaboratorUserDetails[] >response=restTemplate.postForEntity(ROOT_URI,allUsers,CollaboratorUserDetails[].class);
-				 lmn=new TotalNotesDto(noteList.get(i),Arrays.asList(response.getBody()));
+				 System.out.println("ghkjghkkhggggggggggg");
+				 usersList.get().stream().forEach(e->allUsers.add((BigInteger) e));
+				 ResponseEntity<CollaboratorUserDetails[]>userDetails=restTemplate.postForEntity(ROOT_URI,allUsers,
+						 CollaboratorUserDetails[].class);
+				 System.out.println("userDetails  "+userDetails);
+				 totalNotes=new TotalNotesDto(noteList.get(i),Arrays.asList(userDetails.getBody()));
+				 System.out.println("totalNotes  "+totalNotes);
+				 
 			 }
 			 else
 			 {
-				 lmn=new TotalNotesDto(noteList.get(i),new ArrayList<CollaboratorUserDetails>());
+				 totalNotes=new TotalNotesDto(noteList.get(i),new ArrayList<CollaboratorUserDetails>());
 			 }
-			 xyz.add(lmn);		 }
-		return xyz;
-		
+			 totalNotesList.add(totalNotes);	
+			 System.out.println("totalNotesList  ="+totalNotesList);}
+		return totalNotesList;	
 	}
 	
+	
 }	
+
+/*
+
+for (int i = 0; i < notesList.size(); i++) {
+	List<BigInteger> ll = new ArrayList<BigInteger>();
+	Optional<List<Object>> optionalList = collabRepo.findAllUsersOfNote(notesList.get(i).getId());
+	SendingNotes zz = null;
+	if (optionalList.isPresent()) {
+		optionalList.get().stream().forEach(x -> ll.add((BigInteger) x));
+		ResponseEntity<CollabUserDetails[]> response = restTemplate.postForEntity(ROOT_URI, ll,
+				CollabUserDetails[].class);
+		zz = new SendingNotes(notesList.get(i), Arrays.asList(response.getBody())); // ll at response.getBody()
+	} else {
+		zz = new SendingNotes(notesList.get(i), new ArrayList<CollabUserDetails>());
+
+	}
+	xyz.add(zz);
+}
+*/
