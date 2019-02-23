@@ -1,5 +1,6 @@
 package com.api.note.service;
 import java.util.List;
+import java.util.Optional;
 
 import com.api.note.entity.Note;
 import com.api.note.exception.NoteException;

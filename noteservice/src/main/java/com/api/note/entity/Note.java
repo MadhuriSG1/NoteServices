@@ -11,6 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -57,6 +60,7 @@ public class Note implements Serializable {
 	private long userId;
 
 	 @ManyToMany(cascade = CascadeType.ALL)
+	// @JsonIgnoreProperties
 	 private Set<Label> labels;
 
 }

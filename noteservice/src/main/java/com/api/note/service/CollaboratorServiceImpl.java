@@ -1,4 +1,5 @@
 package com.api.note.service;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +54,7 @@ public class CollaboratorServiceImpl implements CollaboratorService {
 		List<Long> noteIds = collaboratorRepository.findAllById(userId)
 				.orElseThrow(() -> new NoteException("Collaborator not found", 100));
 
-		return noterepository.findAllCollaboratorNotes(noteIds);
+		return noterepository.findAllCollaboratorNotes(noteIds).orElse(new ArrayList<Note>());
 
 	}
 

@@ -10,7 +10,7 @@ import lombok.ToString;
 
 @Setter
 @Getter
-@ToString
+//@ToString
 public class TotalNotesDto {
 	private Note note;
 	private List<CollaboratorUserDetails> collabUserDetailsList;
@@ -18,7 +18,7 @@ public class TotalNotesDto {
 	public TotalNotesDto(Note note,List<CollaboratorUserDetails>collabUserDetailsList )
 	{
 		this.note=note;
-		this.collabUserDetailsList=getCollabUserDetailsList();
+		this.collabUserDetailsList=collabUserDetailsList;
 	}
 
 }

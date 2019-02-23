@@ -93,11 +93,13 @@ public class NoteServiceImpl implements NoteService {
 	@Override
 	public  List<TotalNotesDto> getAllNotes(String token,String isArchive,String isTrash) throws NoteException {
 		long userId = TokenUtil.verifyToken(token);
+		
 
 		 List<Note> noteList=noterepository.findAllByStatus(userId, Boolean.valueOf(isArchive), Boolean.valueOf(isTrash))
 				.orElse(new ArrayList<Note>());
-		 noteList.addAll(collaboratorService.getCollaboratorNotes(token));
-		 System.out.println("notelist  "+noteList);
+		 List<Note> collabNotes = collaboratorService.getCollaboratorNotes(token);
+		 noteList.addAll(collabNotes);
+		// System.out.println("notelist  "+noteList);
 		 List<TotalNotesDto> totalNotesList=new ArrayList<TotalNotesDto>();
 		 for(int i=0;i<noteList.size();i++)
 		 {
