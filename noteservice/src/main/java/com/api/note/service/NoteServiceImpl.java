@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +22,8 @@ import com.api.note.exception.NoteException;
 import com.api.note.repository.CollaboratorRepository;
 import com.api.note.repository.NoteRepository;
 import com.api.note.util.TokenUtil;
+
+import javassist.compiler.ast.ASTList;
 import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
@@ -100,11 +104,12 @@ public class NoteServiceImpl implements NoteService {
 		 List<Note> collabNotes = collaboratorService.getCollaboratorNotes(token);
 		 noteList.addAll(collabNotes);
 		// System.out.println("notelist  "+noteList);
+		 //return noteList.stream().map(this::getCollabNotes).collect(Collectors.toList());
 		 List<TotalNotesDto> totalNotesList=new ArrayList<TotalNotesDto>();
 		 for(int i=0;i<noteList.size();i++)
 		 {
 			 List<BigInteger> allUsers=new ArrayList<BigInteger>();
-			 Optional<List<Object>> usersList=collaboratorRepository.findAllUsersOfNote(noteList.get(i).getNoteid());
+			 Optional<List<BigInteger>> usersList=collaboratorRepository.findAllUsersOfNote(noteList.get(i).getNoteid());
 			 System.out.println("usersList = "+usersList);
 			 TotalNotesDto totalNotes=null;
 			 if(usersList.isPresent())
@@ -126,8 +131,15 @@ public class NoteServiceImpl implements NoteService {
 			 System.out.println("totalNotesList  ="+totalNotesList);}
 		return totalNotesList;	
 	}
-	
-	
+	/*private TotalNotesDto getCollabNotes(Note note){
+		return collaboratorRepository.findAllUsersOfNote(note.getNoteid()).map(this::CollaboratorUserDetails).map(collabList->{
+			return new TotalNotesDto(note, collabList);
+		}).orElse(new TotalNotesDto(note, new ArrayList<>()));
+	}
+	private List<CollaboratorUserDetails> CollaboratorUserDetails(List<BigInteger> userIds){
+		return restTemplate.postForEntity(ROOT_URI,userIds,CollaboratorUserDetails[].class;
+		 
+	}*/
 }	
 
 /*

@@ -6,19 +6,19 @@ import com.api.note.entity.Note;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
+
 
 @Setter
 @Getter
 //@ToString
 public class TotalNotesDto {
 	private Note note;
-	private List<CollaboratorUserDetails> collabUserDetailsList;
+	private List<CollaboratorUserDetails> collabList;
 	
-	public TotalNotesDto(Note note,List<CollaboratorUserDetails>collabUserDetailsList )
+	public TotalNotesDto(Note note,List<CollaboratorUserDetails>collabList )
 	{
 		this.note=note;
-		this.collabUserDetailsList=collabUserDetailsList;
+		this.collabList=collabList;
 	}
 
 }

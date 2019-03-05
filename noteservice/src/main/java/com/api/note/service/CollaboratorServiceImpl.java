@@ -31,7 +31,7 @@ public class CollaboratorServiceImpl implements CollaboratorService {
 	public Long addCollaborator(Long UserId, Long noteid, String token) throws NoteException {
 		TokenUtil.verifyToken(token);
 
-		Optional<Long> collabid = collaboratorRepository.findBy(UserId, noteid);
+		Optional<Long>  collabid = collaboratorRepository.findBy(UserId, noteid);
 		if (collabid.isPresent()) {
 			return -1L;
 		} else {
@@ -51,11 +51,9 @@ public class CollaboratorServiceImpl implements CollaboratorService {
 	public List<Note> getCollaboratorNotes(String token) throws NoteException {
 
 		long userId = TokenUtil.verifyToken(token);
-		List<Long> noteIds = collaboratorRepository.findAllById(userId)
-				.orElseThrow(() -> new NoteException("Collaborator not found", 100));
-
-		return noterepository.findAllCollaboratorNotes(noteIds).orElse(new ArrayList<Note>());
-
+		return collaboratorRepository.findAllById(userId)
+									 .flatMap(noterepository::findAllCollaboratorNotes)
+									 .orElse(new ArrayList<>());
 	}
 
 	/*

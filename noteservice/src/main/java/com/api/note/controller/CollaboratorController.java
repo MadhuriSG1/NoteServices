@@ -33,6 +33,10 @@ public class CollaboratorController {
 	@PostMapping
 	public ResponseEntity<Response> addCollaborator(@RequestParam long sharedUserID, @RequestParam long sharedNoteId,
 			@RequestHeader("token") String token) throws NoteException {
+		/*String str = sharedUserID;
+		String str2 = sharedNoteId;
+		long sharedUserID1 = Long.parseLong(str);
+		long sharedNoteId1 = Long.parseLong(str2);*/
 
 		long resp = collaboratorservices.addCollaborator(sharedUserID, sharedNoteId, token);
 		Response response = new Response();
@@ -72,8 +76,8 @@ public class CollaboratorController {
 	 * @throws NoteException
 	 */
 	@DeleteMapping
-	public ResponseEntity<Response> deleteCollaborator(@RequestHeader("token") String token,
-			@RequestParam long sharedUserID, @RequestParam long sharedNoteId) throws NoteException {
+	public ResponseEntity<Response> deleteCollaborator(@RequestParam long sharedUserID, 
+			@RequestParam long sharedNoteId,@RequestHeader("token") String token) throws NoteException {
 		collaboratorservices.deleteCollaborator(token, sharedUserID, sharedNoteId);
 		Response response = new Response();
 		response.setStatusCode(200);
